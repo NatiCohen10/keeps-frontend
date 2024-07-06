@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import TasksPage from "./pages/TasksPage";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "./context/authContext";
 import AuthLayout from "./components/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import Register from "./pages/Register";

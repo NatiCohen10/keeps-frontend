@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../context/authContext";
 import React from "react";
 import { Outlet } from "react-router-dom";
 
@@ -8,7 +8,7 @@ function MainLayout() {
   return (
     <div>
       <Navbar />
-      <div className=" mx-5">
+      <div className=" mx-5 mt-4">
         <Outlet />
       </div>
     </div>

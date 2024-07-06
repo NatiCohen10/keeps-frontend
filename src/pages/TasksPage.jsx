@@ -1,7 +1,8 @@
+import TasksList from "@/components/TasksList";
 import React from "react";
 
 function TasksPage() {
-  return <div>TasksPage</div>;
+  return <TasksList />;
 }
 
 export default TasksPage;

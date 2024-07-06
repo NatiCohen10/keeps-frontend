@@ -9,7 +9,7 @@ import {
 } from "./dropdown-menu";
 import { Avatar, AvatarFallback } from "./avatar";
 import { Button } from "./button";
-import { useAuth } from "../../../context/authContext";
+import { useAuth } from "../../context/authContext";
 
 function NavbarDropdownAvatar() {
   const { logout, loggedInUser } = useAuth();
