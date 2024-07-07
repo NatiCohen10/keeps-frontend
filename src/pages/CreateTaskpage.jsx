@@ -144,7 +144,8 @@ function CreateTaskpage() {
     }));
   };
 
-  const handleCreateTask = async () => {
+  async function handleCreateTask(ev) {
+    ev.preventDefault();
     try {
       console.log(taskData);
       const res = await api.post("/tasks", taskData);
@@ -153,7 +154,7 @@ function CreateTaskpage() {
     } catch (error) {
       console.error("Error creating task:", error);
     }
-  };
+  }
 
   return (
     <Dialog
@@ -178,7 +179,7 @@ function CreateTaskpage() {
             <X color="red" />
           </button>
           <CardContent>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleCreateTask} className="flex flex-col gap-4">
               <div>
                 <Label htmlFor="title">Task Title</Label>
                 <Input
@@ -239,13 +240,9 @@ function CreateTaskpage() {
                   Add Todo
                 </Button>
               </div>
-              <button
-                type="button"
-                onClick={handleCreateTask}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-              >
+              <Button type="submit" className="  py-2 px-4 rounded ">
                 Create Task
-              </button>
+              </Button>
             </form>
           </CardContent>
         </Card>

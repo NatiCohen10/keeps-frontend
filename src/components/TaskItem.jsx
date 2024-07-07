@@ -19,13 +19,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 function TaskItem(props) {
   const { task, onTogglePin, setTasks, tasks } = props;
   const [todoList, setTodoList] = useState(task.todoList);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleClose = () => {
+    navigate(-1);
+  };
 
   async function toggleIsChecked(ev, todoId) {
     try {
