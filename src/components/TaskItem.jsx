@@ -7,12 +7,25 @@ import {
   CardTitle,
 } from "./ui/card";
 import TodoCheckbox from "../components/ui/TodoCheckbox";
-import { Pin, PinOff } from "lucide-react";
+import { Pin, PinOff, Trash2 } from "lucide-react";
 import api from "../lib/api";
+import { Button } from "./ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function TaskItem(props) {
-  const { task, onTogglePin } = props;
+  const { task, onTogglePin, setTasks, tasks } = props;
   const [todoList, setTodoList] = useState(task.todoList);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   async function toggleIsChecked(ev, todoId) {
     try {
@@ -36,6 +49,21 @@ function TaskItem(props) {
         return todo;
       });
       setTodoList(todoToToggle);
+    }
+  }
+
+  async function handleDeleteTask(taskId, ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const previousTasks = tasks;
+
+    try {
+      const updatedTasks = tasks?.filter((task) => task._id !== taskId);
+      setTasks(updatedTasks);
+      await api.delete(`/tasks/${taskId}`);
+    } catch (error) {
+      console.error(error);
+      setTasks(previousTasks);
     }
   }
 
@@ -64,7 +92,7 @@ function TaskItem(props) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className=" relative">
           <p className="text-lg mb-4">{task.body}</p>
           <div>
             {todoList.map((todo) => {
@@ -77,8 +105,44 @@ function TaskItem(props) {
               );
             })}
           </div>
+          <Button
+            onClick={(ev) => {
+              ev.preventDefault();
+              ev.stopPropagation();
+              setIsDialogOpen(true);
+            }}
+            variant="icon"
+            className=" absolute -right-2 bottom-0"
+          >
+            <Trash2 color="#f74545" />
+          </Button>
         </CardContent>
       </Card>
+      <AlertDialog open={isDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              task and remove its data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={(ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                setIsDialogOpen(false);
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={(ev) => handleDeleteTask(task._id, ev)}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -12,6 +12,7 @@ api.interceptors.request.use(
     token = token?.slice(1, -1);
 
     if (token) config.headers.Authorization = `Bearer ${token}`;
+
     return config;
   },
   (error) => {

@@ -11,9 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import { useClickAway } from "@uidotdev/usehooks";
-import { X } from "lucide-react";
+import { CircleX, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function TaskDetailsPage() {
   const [task, setTask] = useState(null);
@@ -36,7 +36,7 @@ function TaskDetailsPage() {
   }, []);
 
   const handleClose = () => {
-    navigate(-1); // Navigates to the previous page
+    navigate(-1);
   };
 
   const dialogRef = useClickAway(handleClose);
@@ -92,6 +92,25 @@ function TaskDetailsPage() {
     }
   }
 
+  async function handleDeleteTodo(todoId) {
+    const previousTodos = task.todoList;
+    try {
+      const updatedTodos = task.todoList.filter((todo) => {
+        return todo._id !== todoId;
+      });
+      console.log(updatedTodos);
+      setTask((prev) => {
+        return { ...prev, todoList: updatedTodos };
+      });
+      await api.patch(`/tasks/${taskId}`, {
+        todoList: updatedTodos,
+      });
+    } catch (error) {
+      console.error(error);
+      setTask((prev) => ({ ...prev, todoList: previousTodos }));
+    }
+  }
+
   return (
     <Dialog
       open={true}
@@ -125,11 +144,21 @@ function TaskDetailsPage() {
                   <div className=" flex flex-col gap-2">
                     {task.todoList.map((todo) => {
                       return (
-                        <TodoCheckbox
+                        <div
                           key={todo._id}
-                          todo={todo}
-                          toggleIsChecked={toggleIsComplete}
-                        />
+                          className=" flex justify-between items-center"
+                        >
+                          <TodoCheckbox
+                            todo={todo}
+                            toggleIsChecked={toggleIsComplete}
+                          />
+                          <Button
+                            variant="icon"
+                            onClick={() => handleDeleteTodo(todo._id)}
+                          >
+                            <CircleX color="red" />
+                          </Button>
+                        </div>
                       );
                     })}
                     <div className="flex gap-2 mt-4">

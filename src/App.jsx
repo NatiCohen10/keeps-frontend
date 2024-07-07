@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import Register from "./pages/Register";
 import NotFoundPage from "./pages/NotFoundPage";
 import TaskDetailsPage from "./pages/TaskDetailsPage";
+import CreateTaskpage from "./pages/CreateTaskpage";
 
 function AuthorizeAccess({ children }) {
   const { loggedInUser } = useAuth();
@@ -51,6 +52,7 @@ function App() {
             }
           >
             <Route path=":taskId" element={<TaskDetailsPage />} />
+            <Route path="create" element={<CreateTaskpage />} />
           </Route>
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
