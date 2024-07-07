@@ -83,7 +83,6 @@ import { Label } from "@/components/ui/label";
 import { X, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useClickAway } from "@uidotdev/usehooks";
 
