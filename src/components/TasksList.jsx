@@ -10,17 +10,18 @@ function TasksList() {
   const location = useLocation();
 
   useEffect(() => {
-    async function fetchTasks() {
-      try {
-        const res = await api.get("/tasks");
-        setTasks(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
+    console.log(location.pathname);
     fetchTasks();
   }, [location.pathname]);
+
+  async function fetchTasks() {
+    try {
+      const res = await api.get("/tasks");
+      setTasks(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function togglePin(ev, taskId) {
     try {
@@ -45,9 +46,11 @@ function TasksList() {
       );
     }
   }
-  const pinnedTasks = tasks.filter((task) => task.isPinned);
-  const unpinnedTasks = tasks.filter((task) => !task.isPinned);
-  console.log("pinned tasks", pinnedTasks);
+  const pinnedTasks = [];
+  const unpinnedTasks = [];
+  tasks.filter((task) => {
+    return task.isPinned ? pinnedTasks.push(task) : unpinnedTasks.push(task);
+  });
 
   return (
     <>

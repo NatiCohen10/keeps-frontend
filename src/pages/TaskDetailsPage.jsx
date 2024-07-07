@@ -27,6 +27,7 @@ function TaskDetailsPage() {
     async function fetchTask() {
       try {
         const res = await api.get(`/tasks/${taskId}`);
+
         setTask(res.data);
       } catch (error) {
         console.error(error);
