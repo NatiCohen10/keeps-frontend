@@ -6,27 +6,42 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Checkbox } from "./ui/checkbox";
+import TodoCheckbox from "../components/ui/TodoCheckbox";
 import { Pin, PinOff } from "lucide-react";
+import api from "../lib/api";
 
 function TaskItem(props) {
   const { task, onTogglePin } = props;
   const [todoList, setTodoList] = useState(task.todoList);
 
-  function toggleIsChecked(ev, todoId) {
-    ev.stopPropagation();
-    const todoToToggle = todoList.map((todo) => {
-      if (todo._id === todoId) {
-        return { ...todo, isComplete: !todo.isComplete };
-      }
-      return todo;
-    });
-    setTodoList(todoToToggle);
+  async function toggleIsChecked(ev, todoId) {
+    try {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      const todoToToggle = todoList.map((todo) => {
+        if (todo._id === todoId) {
+          return { ...todo, isComplete: !todo.isComplete };
+        }
+        return todo;
+      });
+      setTodoList(todoToToggle);
+      await api.patch(`/tasks/${task._id}`, { todoList: todoToToggle });
+    } catch (error) {
+      console.error(error);
+      const todoToToggle = todoList.map((todo) => {
+        if (todo._id === todoId) {
+          return { ...todo, isComplete: todo.isComplete };
+        }
+        return todo;
+      });
+      setTodoList(todoToToggle);
+    }
   }
 
   return (
     <>
-      <Card>
+      <Card className=" flex flex-col justify-between h-full">
         <CardHeader>
           <div className=" flex justify-between">
             <div>
@@ -54,18 +69,11 @@ function TaskItem(props) {
           <div>
             {todoList.map((todo) => {
               return (
-                <div className=" flex items-center gap-3 mb-2" key={todo._id}>
-                  <Checkbox
-                    id={todo.title}
-                    checked={todo.isComplete}
-                    onClick={(ev) => {
-                      toggleIsChecked(ev, todo._id);
-                    }}
-                  />
-                  <label className=" cursor-pointer" htmlFor={todo.title}>
-                    {todo.title}
-                  </label>
-                </div>
+                <TodoCheckbox
+                  key={todo._id}
+                  todo={todo}
+                  toggleIsChecked={toggleIsChecked}
+                />
               );
             })}
           </div>

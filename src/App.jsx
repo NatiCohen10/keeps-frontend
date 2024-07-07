@@ -10,6 +10,7 @@ import AuthLayout from "./components/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import Register from "./pages/Register";
 import NotFoundPage from "./pages/NotFoundPage";
+import TaskDetailsPage from "./pages/TaskDetailsPage";
 
 function AuthorizeAccess({ children }) {
   const { loggedInUser } = useAuth();
@@ -41,15 +42,15 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="/tasks">
-            <Route
-              index
-              element={
-                <AuthorizeAccess>
-                  <TasksPage />
-                </AuthorizeAccess>
-              }
-            />
+          <Route
+            path="/tasks"
+            element={
+              <AuthorizeAccess>
+                <TasksPage />
+              </AuthorizeAccess>
+            }
+          >
+            <Route path=":taskId" element={<TaskDetailsPage />} />
           </Route>
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
