@@ -26,10 +26,6 @@ function TaskItem(props) {
   const [todoList, setTodoList] = useState(task.todoList);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleClose = () => {
-    navigate(-1);
-  };
-
   async function toggleIsChecked(ev, todoId) {
     try {
       ev.preventDefault();
@@ -72,7 +68,7 @@ function TaskItem(props) {
 
   return (
     <>
-      <Card className=" flex flex-col justify-between h-full">
+      <Card className=" hover:-translate-y-2 transition flex flex-col justify-between h-full">
         <CardHeader>
           <div className=" flex justify-between">
             <div>
