@@ -12,10 +12,10 @@ function TasksList() {
 
   useEffect(() => {
     async function fetchTasks() {
-      console.log(location.pathname);
       try {
         const res = await api.get("/tasks");
         setTasks(res.data);
+        console.log(location.pathname);
       } catch (error) {
         console.error(error);
       }
@@ -47,8 +47,13 @@ function TasksList() {
       );
     }
   }
-  const pinnedTasks = tasks.filter((task) => task.isPinned);
-  const unpinnedTasks = tasks.filter((task) => !task.isPinned);
+
+  const pinnedTasks = [];
+  const unpinnedTasks = [];
+
+  tasks.filter((task) =>
+    task.isPinned ? pinnedTasks.push(task) : unpinnedTasks.push(task)
+  );
 
   return (
     <>
