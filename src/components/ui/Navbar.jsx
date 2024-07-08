@@ -23,7 +23,7 @@ function TopNavLink(props) {
 function Navbar() {
   const { loggedInUser } = useAuth();
   return (
-    <nav className=" bg-card shadow-md sticky top-0 left-0 py-3">
+    <nav className=" bg-card shadow-md sticky top-0 left-0 py-3 z-50">
       <ul className=" flex justify-between items-center mx-5">
         <li className=" text-2xl font-bold">
           <TopNavLink href="/">

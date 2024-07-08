@@ -3,6 +3,7 @@ import TaskItem from "./TaskItem";
 import api from "@/lib/api";
 import { useAuth } from "../context/authContext";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from "./ui/button";
 
 function TasksList() {
   const { loggedInUser } = useAuth();
@@ -10,18 +11,18 @@ function TasksList() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location.pathname);
+    async function fetchTasks() {
+      try {
+        const res = await api.get("/tasks");
+        setTasks(res.data);
+        console.log(location.pathname);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchTasks();
   }, [location.pathname]);
-
-  async function fetchTasks() {
-    try {
-      const res = await api.get("/tasks");
-      setTasks(res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   async function togglePin(ev, taskId) {
     try {
@@ -46,11 +47,13 @@ function TasksList() {
       );
     }
   }
+
   const pinnedTasks = [];
   const unpinnedTasks = [];
-  tasks.filter((task) => {
-    return task.isPinned ? pinnedTasks.push(task) : unpinnedTasks.push(task);
-  });
+
+  tasks.filter((task) =>
+    task.isPinned ? pinnedTasks.push(task) : unpinnedTasks.push(task)
+  );
 
   return (
     <>
@@ -58,11 +61,21 @@ function TasksList() {
         Hello, {loggedInUser.firstName}
       </h1>
       <div>
+        <Button>
+          <Link to={"/tasks/create"}>Add new task</Link>
+        </Button>
+      </div>
+      <div>
         <h2 className="text-2xl font-semibold mb-3">Pinned Tasks</h2>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {pinnedTasks.map((task) => (
             <Link key={task._id} className=" h-full" to={`/tasks/${task._id}`}>
-              <TaskItem onTogglePin={togglePin} task={task} />
+              <TaskItem
+                onTogglePin={togglePin}
+                setTasks={setTasks}
+                task={task}
+                tasks={tasks}
+              />
             </Link>
           ))}
         </div>
@@ -72,7 +85,12 @@ function TasksList() {
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {unpinnedTasks.map((task) => (
             <Link key={task._id} to={`/tasks/${task._id}`}>
-              <TaskItem onTogglePin={togglePin} task={task} />
+              <TaskItem
+                onTogglePin={togglePin}
+                setTasks={setTasks}
+                tasks={tasks}
+                task={task}
+              />
             </Link>
           ))}
         </div>
