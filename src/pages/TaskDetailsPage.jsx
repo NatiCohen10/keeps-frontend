@@ -1,19 +1,28 @@
 import TodoCheckbox from "@/components/ui/TodoCheckbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogOverlay,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import { useClickAway } from "@uidotdev/usehooks";
 import { CircleX, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+function makeId(length) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charactersLength);
+    result += characters[randomIndex];
+  }
+
+  return result;
+}
 
 function TaskDetailsPage() {
   const [task, setTask] = useState(null);
@@ -22,6 +31,7 @@ function TaskDetailsPage() {
   const params = useParams();
   const { taskId } = params;
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     async function fetchTask() {
@@ -44,7 +54,6 @@ function TaskDetailsPage() {
 
   async function toggleIsComplete(ev, todoId) {
     try {
-      ev.preventDefault();
       const todoToToggle = task.todoList.map((todo) => {
         if (todo._id === todoId) {
           return { ...todo, isComplete: !todo.isComplete };
@@ -72,24 +81,33 @@ function TaskDetailsPage() {
   }
 
   async function handleAddTodo() {
+    const todoId = makeId(10);
     try {
-      const newTodoObj = {
+      const todoToRender = {
+        _id: todoId,
+        title: newTodo,
+        isComplete: false,
+      };
+      const todoToPost = {
         title: newTodo,
         isComplete: false,
       };
 
-      const updatedTodoList = [...task.todoList, newTodoObj];
+      const todoListToRender = [...task.todoList, todoToRender];
+      const todoListToPost = [...task.todoList, todoToPost];
       setTask((prev) => ({
         ...prev,
-        todoList: updatedTodoList,
+        todoList: todoListToRender,
       }));
-
+      console.log("todoListToRender:", todoListToRender);
       await api.patch(`/tasks/${taskId}`, {
-        todoList: updatedTodoList,
+        todoList: todoListToPost,
       });
       setNewTodo("");
     } catch (error) {
       console.error("Error adding todo:", error);
+      const prevTodoList = task.todoList.filter((todo) => todo._id !== todoId);
+      setTask((prev) => ({ ...prev, todoList: prevTodoList }));
     }
   }
 
@@ -149,10 +167,24 @@ function TaskDetailsPage() {
                           key={todo._id}
                           className=" flex justify-between items-center"
                         >
-                          <TodoCheckbox
-                            todo={todo}
-                            toggleIsChecked={toggleIsComplete}
-                          />
+                          <div className=" flex items-center gap-3 mb-2">
+                            <Checkbox
+                              id={`${todo._id}`}
+                              checked={todo.isComplete}
+                              onClick={(ev) => {
+                                toggleIsComplete(ev, todo._id);
+                              }}
+                            />
+                            <label
+                              className=" cursor-pointer"
+                              onClick={(ev) => {
+                                console.log(todo.title);
+                              }}
+                              htmlFor={`${todo._id}`}
+                            >
+                              {todo.title}
+                            </label>
+                          </div>
                           <Button
                             variant="icon"
                             onClick={() => handleDeleteTodo(todo._id)}

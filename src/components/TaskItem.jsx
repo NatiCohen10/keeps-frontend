@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -20,34 +20,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useClickAway } from "@uidotdev/usehooks";
+import { useNavigate } from "react-router-dom";
 
 function TaskItem(props) {
   const { task, onTogglePin, setTasks, tasks } = props;
-  const [todoList, setTodoList] = useState(task.todoList);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  async function toggleIsChecked(ev, todoId) {
-    try {
-      ev.preventDefault();
-      ev.stopPropagation();
+  const modalRef = useClickAway((ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    setIsDialogOpen(false);
+  });
 
-      const todoToToggle = todoList.map((todo) => {
+  async function toggleIsChecked(ev, todoId) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const previousTasks = [...tasks];
+    try {
+      const todoToToggle = task.todoList.map((todo) => {
         if (todo._id === todoId) {
           return { ...todo, isComplete: !todo.isComplete };
         }
         return todo;
       });
-      setTodoList(todoToToggle);
+      const updatedTasks = tasks.map((val) =>
+        val._id === task._id ? { ...task, todoList: todoToToggle } : val
+      );
+      setTasks(updatedTasks);
       await api.patch(`/tasks/${task._id}`, { todoList: todoToToggle });
     } catch (error) {
       console.error(error);
-      const todoToToggle = todoList.map((todo) => {
-        if (todo._id === todoId) {
-          return { ...todo, isComplete: todo.isComplete };
-        }
-        return todo;
-      });
-      setTodoList(todoToToggle);
+      setTasks(previousTasks);
     }
   }
 
@@ -94,7 +98,7 @@ function TaskItem(props) {
         <CardContent className=" relative">
           <p className="text-lg mb-4">{task.body}</p>
           <div>
-            {todoList.map((todo) => {
+            {task.todoList.map((todo) => {
               return (
                 <TodoCheckbox
                   key={todo._id}
@@ -118,7 +122,7 @@ function TaskItem(props) {
         </CardContent>
       </Card>
       <AlertDialog open={isDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent ref={modalRef}>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -136,8 +140,13 @@ function TaskItem(props) {
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={(ev) => handleDeleteTask(task._id, ev)}>
-              Continue
+            <AlertDialogAction
+              asChild
+              onClick={(ev) => handleDeleteTask(task._id, ev)}
+            >
+              <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Continue
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

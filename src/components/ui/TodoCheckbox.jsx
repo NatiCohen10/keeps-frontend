@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox } from "./checkbox";
+import { useLocation } from "react-router-dom";
 
 function TodoCheckbox(props) {
   const { todo, toggleIsChecked } = props;
+
+  const location = useLocation();
   return (
-    <div className=" flex items-center gap-3 mb-2" key={todo._id}>
+    <div className=" flex items-center gap-3 mb-2">
       <Checkbox
-        id={todo._id}
+        id={`list-${todo._id}`}
         checked={todo.isComplete}
         onClick={(ev) => {
           toggleIsChecked(ev, todo._id);
@@ -18,7 +21,7 @@ function TodoCheckbox(props) {
           console.log(todo.title);
           ev.stopPropagation();
         }}
-        htmlFor={todo._id}
+        htmlFor={`list-${todo._id}`}
       >
         {todo.title}
       </label>

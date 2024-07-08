@@ -14,8 +14,8 @@ function TasksList() {
     async function fetchTasks() {
       try {
         const res = await api.get("/tasks");
+
         setTasks(res.data);
-        console.log(location.pathname);
       } catch (error) {
         console.error(error);
       }

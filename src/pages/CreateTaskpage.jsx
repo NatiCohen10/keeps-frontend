@@ -215,6 +215,12 @@ function CreateTaskpage() {
                 <Label>Todo List</Label>
                 {taskData.todoList.map((todo, index) => (
                   <div key={index} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="isComplete"
+                      checked={todo.isComplete}
+                      onChange={(e) => handleTodoChange(index, e)}
+                    />
                     <Input
                       type="text"
                       name="title"
@@ -222,12 +228,7 @@ function CreateTaskpage() {
                       onChange={(e) => handleTodoChange(index, e)}
                       placeholder="Todo title..."
                     />
-                    <input
-                      type="checkbox"
-                      name="isComplete"
-                      checked={todo.isComplete}
-                      onChange={(e) => handleTodoChange(index, e)}
-                    />
+
                     <Button
                       variant="icon"
                       onClick={() => handleRemoveTodo(index)}
