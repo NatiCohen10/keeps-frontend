@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/lib/api";
 import { useClickAway } from "@uidotdev/usehooks";
 import { CircleX, X } from "lucide-react";
@@ -27,20 +28,23 @@ function makeId(length) {
 function TaskDetailsPage() {
   const [task, setTask] = useState(null);
   const [newTodo, setNewTodo] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const params = useParams();
   const { taskId } = params;
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     async function fetchTask() {
       try {
+        setLoading(true);
         const res = await api.get(`/tasks/${taskId}`);
 
         setTask(res.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchTask();
@@ -150,18 +154,26 @@ function TaskDetailsPage() {
             <X color="red" />
           </button>
           <CardContent>
-            {task ? (
-              <>
+            <>
+              {loading ? (
+                <div className=" space-y-3">
+                  <Skeleton className=" w-64 h-32" />
+
+                  <Skeleton className=" w-64 h-8" />
+                  <Skeleton className=" w-64 h-8" />
+                  <Skeleton className=" w-64 h-8" />
+                </div>
+              ) : (
                 <div className=" relative flex flex-col gap-5">
                   <div>
-                    <h1 className="text-2xl font-bold">{task.title}</h1>
+                    <h1 className="text-2xl font-bold">{task?.title}</h1>
                     <h2 className=" text-muted-foreground">
-                      {task.description}
+                      {task?.description}
                     </h2>
                   </div>
-                  <p>{task.body}</p>
-                  <div className=" flex flex-col gap-2">
-                    {task.todoList.map((todo) => {
+                  <p>{task?.body}</p>
+                  <div className=" flex flex-col gap-2 max-h-80 overflow-y-auto">
+                    {task?.todoList.map((todo) => {
                       return (
                         <div
                           key={todo._id}
@@ -205,10 +217,8 @@ function TaskDetailsPage() {
                     </div>
                   </div>
                 </div>
-              </>
-            ) : (
-              <div>Loading...</div>
-            )}
+              )}
+            </>
           </CardContent>
         </Card>
       </DialogContent>

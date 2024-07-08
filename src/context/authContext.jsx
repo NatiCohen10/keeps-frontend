@@ -1,12 +1,14 @@
 import api from "@/lib/api";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import React, { createContext, useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState(undefined);
   const [token, setToken] = useLocalStorage("jwt-taskify", null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
@@ -37,6 +39,7 @@ export const AuthProvider = ({ children }) => {
   function logout() {
     setToken(null);
     setLoggedInUser(null);
+    navigate("/");
   }
 
   async function login(userData) {

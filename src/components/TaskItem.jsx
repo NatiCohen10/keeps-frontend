@@ -21,10 +21,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useNavigate } from "react-router-dom";
+import { Skeleton } from "./ui/skeleton";
 
 function TaskItem(props) {
-  const { task, onTogglePin, setTasks, tasks } = props;
+  const { task, onTogglePin, setTasks, tasks, loading } = props;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const modalRef = useClickAway((ev) => {
