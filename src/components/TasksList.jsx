@@ -5,12 +5,16 @@ import { useAuth } from "../context/authContext";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import { useToast } from "./ui/use-toast";
 
 function TasksList() {
   const { loggedInUser } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
+  const { toast } = useToast();
+
+  // toast({ title: "hi", description: "bye", variant: "destructive" });
 
   useEffect(() => {
     async function fetchTasks() {

@@ -51,8 +51,22 @@ function App() {
               </AuthorizeAccess>
             }
           >
-            <Route path=":taskId" element={<TaskDetailsPage />} />
-            <Route path="create" element={<CreateTaskpage />} />
+            <Route
+              path=":taskId"
+              element={
+                <AuthorizeAccess>
+                  <TaskDetailsPage />
+                </AuthorizeAccess>
+              }
+            />
+            <Route
+              path="create"
+              element={
+                <AuthorizeAccess>
+                  <CreateTaskpage />
+                </AuthorizeAccess>
+              }
+            />
           </Route>
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
