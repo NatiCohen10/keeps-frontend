@@ -92,7 +92,7 @@ function TaskItem(props) {
 
   return (
     <>
-      <Card className=" hover:-translate-y-2 transition flex flex-col justify-between h-full">
+      <Card className=" relative hover:-translate-y-2 transition flex flex-col  h-full">
         <CardHeader>
           <div className=" flex justify-between">
             <div>
@@ -128,18 +128,18 @@ function TaskItem(props) {
               );
             })}
           </div>
-          <Button
-            onClick={(ev) => {
-              ev.preventDefault();
-              ev.stopPropagation();
-              setIsDialogOpen(true);
-            }}
-            variant="icon"
-            className=" absolute -right-2 bottom-0"
-          >
-            <Trash2 color="#f74545" />
-          </Button>
         </CardContent>
+        <Button
+          onClick={(ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            setIsDialogOpen(true);
+          }}
+          variant="icon"
+          className=" absolute -right-2 bottom-0"
+        >
+          <Trash2 color="#f74545" />
+        </Button>
       </Card>
       <AlertDialog open={isDialogOpen}>
         <AlertDialogContent ref={modalRef}>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 import KeyFeatures from "@/components/ui/KeyFeatures";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/context/authContext";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { Github, Linkedin } from "lucide-react";
 import React from "react";
@@ -38,6 +39,8 @@ function HomePage() {
     rootMargin: "16px",
   });
 
+  const { loggedInUser } = useAuth();
+
   return (
     <div>
       {/* Introduction Section */}
@@ -57,16 +60,23 @@ function HomePage() {
               of your organizing needs in one place! With Taskly, you will never
               have to worry about remembering tasks ever again.
             </p>
-
-            <div className="flex flex-col gap-4 my-8 md:items-center">
-              <Button asChild className="text-foreground py-6 md:w-96">
-                <Link to="/auth/login">Login</Link>
-              </Button>
-              <p className="text-center text-xl font-bold">or</p>
-              <Button asChild className="text-foreground py-6 md:w-96">
-                <Link to="/auth/register">Sign up</Link>
-              </Button>
-            </div>
+            {loggedInUser ? (
+              <div className=" mt-4">
+                <Button asChild className="text-foreground py-6 w-80 md:w-96">
+                  <Link to="/tasks">My tasks</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 my-8 md:items-center">
+                <Button asChild className="text-foreground py-6 md:w-96">
+                  <Link to="/auth/login">Login</Link>
+                </Button>
+                <p className="text-center text-xl font-bold">or</p>
+                <Button asChild className="text-foreground py-6 md:w-96">
+                  <Link to="/auth/register">Sign up</Link>
+                </Button>
+              </div>
+            )}
           </div>
           <div className="hidden lg:block">
             <img
@@ -121,54 +131,59 @@ function HomePage() {
       </section>
 
       {/* Download/Sign Up Section */}
-      <section
-        ref={getStartedRef}
-        className={`p-4 ${
-          getStartedEntry?.isIntersecting ? "animate-fadeInUp" : ""
-        }`}
-      >
-        <h2 className="text-3xl font-bold">Get Started with Taskly Today!</h2>
-        <p className="text-lg mt-3 mb-5">
-          Sign up Today and start managing your tasks efficiently, securely and
-          easily!
-        </p>
-        <div className="flex flex-col items-center gap-4 md:items-start">
-          <Button className="w-80 sm:w-96" asChild>
-            <Link to="/register">Sign Up Now</Link>
-          </Button>
-          <p className="text-xl font-bold md:ml-16">Already have an account?</p>
-          <Button className="w-80 sm:w-96 " asChild>
-            <Link to="/register">Login</Link>
-          </Button>
-        </div>
-      </section>
+      {!loggedInUser && (
+        <section
+          ref={getStartedRef}
+          className={`p-4 ${
+            getStartedEntry?.isIntersecting ? "animate-fadeInUp" : ""
+          }`}
+        >
+          <h2 className="text-3xl text-center  font-bold">
+            Get Started with Taskly Today!
+          </h2>
+          <p className="text-lg text-center  mt-3 mb-5">
+            Sign up Today and start managing your tasks efficiently, securely
+            and easily!
+          </p>
+          <div className="flex flex-col items-center gap-4 ">
+            <Button className="w-80 sm:w-96" asChild>
+              <Link to="/register">Sign Up Now</Link>
+            </Button>
+            <p className="text-xl font-bold ">Already have an account?</p>
+            <Button className="w-80 sm:w-96 " asChild>
+              <Link to="/register">Login</Link>
+            </Button>
+          </div>
+        </section>
+      )}
 
       {/* Footer Section */}
-      <footer className="mt-20">
-        <Separator />
-        <nav className="">
+      <footer className=" bg-card pr-4 items-center justify-between flex flex-col lg:h-24 lg:flex-row border border-foreground rounded-ss-sm rounded-se-sm border-b-0 md:px-10 mt-20">
+        <nav className="flex">
           <Button asChild variant="link">
             <Link to="/about">About us</Link>
           </Button>
-          <Separator />
+          <Separator orientation="vertical" />
           <Button asChild variant="link">
             <Link to="/contact">Contact us</Link>
           </Button>
         </nav>
-        <Separator />
-        <p className="flex gap-2 text-lg my-4">
+
+        <div className="flex flex-col lg:flex-row gap-3 text-lg mt-2 mb-4 md:my-4">
           Built by Netanel Cohen{" "}
-          <a href="https://github.com/NatiCohen10" target="_blank">
-            <Github />
-          </a>{" "}
-          <a
-            href="https://www.linkedin.com/in/netanel-cohen-705745307/"
-            target="_blank"
-          >
-            <Linkedin />
-          </a>
-        </p>
-        <p className="text-lg">
+          <div className=" flex justify-center gap-5">
+            <a href="https://github.com/NatiCohen10" target="_blank">
+              <Github />
+            </a>{" "}
+            <a
+              href="https://www.linkedin.com/in/netanel-cohen-705745307/"
+              target="_blank"
+            >
+              <Linkedin />
+            </a>
+          </div>
+        </div>
+        <p className="text-sm lg:text-lg">
           &copy; {new Date().getFullYear()} Taskly. All rights reserved.
         </p>
       </footer>
