@@ -81,7 +81,7 @@ function HomePage() {
       {/* Key Features Section */}
       <section
         ref={keyFeaturesRef}
-        className={`p-4 h-[80vh] ${
+        className={`p-4 h-[95vh] sm:h-[80vh] ${
           keyFeaturesEntry?.isIntersecting ? "animate-fadeInUp" : ""
         }`}
       >
