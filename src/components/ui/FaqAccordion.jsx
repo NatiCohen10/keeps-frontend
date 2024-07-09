@@ -30,7 +30,7 @@ function FaqAccordion() {
       </AccordionItem>
       <AccordionItem value="item-3">
         <AccordionTrigger className=" text-2xl">
-          How can I get started using Taskly?
+          How can I get started?
         </AccordionTrigger>
         <AccordionContent className=" bg-card text-lg px-2 rounded-sm">
           Getting started is quite easy! Head over to the{" "}
