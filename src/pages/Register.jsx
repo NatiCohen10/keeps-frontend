@@ -40,7 +40,7 @@ function Register() {
     const form = new FormData(ev.target);
     const username = form.get("username");
     const newPassword = password;
-    if (newPassword.length <= 8) {
+    if (newPassword.length < 8) {
       toast({
         title: "Password is too short!",
         description: "Password needs to be atleast 8 characters long ",
@@ -51,9 +51,16 @@ function Register() {
     const email = form.get("email");
     const firstName = form.get("firstName");
     const lastName = form.get("lastName");
-    const userToAdd = { username, newPassword, email, firstName, lastName };
+    const userToAdd = {
+      username,
+      password: newPassword,
+      email,
+      firstName,
+      lastName,
+    };
     register(userToAdd);
     ev.target.reset();
+    setPassword("");
   }
   const progressPercentage = (score / 4) * 100;
   return (

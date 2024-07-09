@@ -115,7 +115,7 @@ function HomePage() {
       </section>
 
       {/* FAQs Section */}
-      <section className={`h-[50vh]`}>
+      <section className={`h-[65vh] sm:h-[50vh]`}>
         <h2 className="text-3xl font-bold mt-3">FAQs</h2>
         <FaqAccordion />
       </section>
