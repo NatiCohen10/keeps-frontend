@@ -22,10 +22,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useClickAway } from "@uidotdev/usehooks";
 import { Skeleton } from "./ui/skeleton";
+import { useToast } from "./ui/use-toast";
 
 function TaskItem(props) {
-  const { task, onTogglePin, setTasks, tasks, loading } = props;
+  const { task, onTogglePin, setTasks, tasks } = props;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const modalRef = useClickAway((ev) => {
     ev.preventDefault();
@@ -49,8 +51,17 @@ function TaskItem(props) {
       );
       setTasks(updatedTasks);
       await api.patch(`/tasks/${task._id}`, { todoList: todoToToggle });
+      toast({
+        title: "Success!",
+        description: "Successfuly updated your task",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to update a task",
+        variant: "error",
+      });
       setTasks(previousTasks);
     }
   }
@@ -64,8 +75,17 @@ function TaskItem(props) {
       const updatedTasks = tasks?.filter((task) => task._id !== taskId);
       setTasks(updatedTasks);
       await api.delete(`/tasks/${taskId}`);
+      toast({
+        title: "Success!",
+        description: "Successfuly deleted your task",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to delete a task",
+        variant: "error",
+      });
       setTasks(previousTasks);
     }
   }

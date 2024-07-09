@@ -27,7 +27,6 @@ function AuthorizeAccess({ children }) {
 
 function UnauthorizeAccess({ children }) {
   const { loggedInUser } = useAuth();
-  console.log(loggedInUser);
   if (loggedInUser) {
     return <Navigate to={"/"} />;
   } else {

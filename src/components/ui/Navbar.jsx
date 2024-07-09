@@ -46,7 +46,7 @@ function Navbar() {
       ref={mobileMenuRef}
       className="bg-card shadow-md sticky top-0 left-0 py-3 z-50"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" mx-5 md:mx-10 lg:mx-14 xl:mx-20">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 my-auto">

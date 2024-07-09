@@ -1,80 +1,3 @@
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { useClickAway } from "@uidotdev/usehooks";
-// import { X } from "lucide-react";
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-
-// function CreateTaskpage() {
-//   const navigate = useNavigate();
-//   const handleClose = () => {
-//     navigate(-1);
-//   };
-//   const dialogRef = useClickAway(handleClose);
-
-//   function handleSubmit(e) {
-//     e.preventDefault();
-//   }
-
-//   return (
-//     <Dialog
-//       open={true}
-//       onClose={handleClose}
-//       className="fixed inset-0 z-50 flex items-center justify-center  "
-//     >
-//       <DialogContent
-//         aria-describedby={undefined}
-//         className="max-w-lg  rounded-lg shadow-lg p-6 w-full "
-//         ref={dialogRef}
-//       >
-//         <DialogTitle className="hidden"></DialogTitle>
-//         <Card className="relative py-4">
-//           <CardHeader>
-//             <CardTitle>Add a new task</CardTitle>
-//           </CardHeader>
-//           <button
-//             className=" absolute right-1 top-1 cursor-pointer "
-//             onClick={handleClose}
-//           >
-//             <X color="red" />
-//           </button>
-//           <CardContent>
-//             <form onSubmit={handleSubmit} className=" flex flex-col gap-4">
-//               <div>
-//                 <Label htmlFor="title">Task Title</Label>
-//                 <Input
-//                   required
-//                   id="title"
-//                   name="title"
-//                   placeholder="Task title..."
-//                 />
-//               </div>
-//               <div>
-//                 <Label htmlFor="description">Task Description</Label>
-//                 <Input
-//                   id="description"
-//                   name="description"
-//                   placeholder="Task description..."
-//                 />
-//               </div>
-//               <div>
-//                 <Label htmlFor="body">Task Content</Label>
-//                 <Input id="body" name="body" placeholder="Task content..." />
-//               </div>
-//               <Button className=" text-foreground">Create Task</Button>
-//             </form>
-//           </CardContent>
-//         </Card>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
-
-// export default CreateTaskpage;
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -85,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { Button } from "@/components/ui/button";
 import { useClickAway } from "@uidotdev/usehooks";
+import { useToast } from "@/components/ui/use-toast";
 
 function CreateTaskpage() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
@@ -147,12 +72,19 @@ function CreateTaskpage() {
   async function handleCreateTask(ev) {
     ev.preventDefault();
     try {
-      console.log(taskData);
       const res = await api.post("/tasks", taskData);
-      console.log("Task created:", res.data);
+      toast({
+        title: "Success!",
+        description: "Successfully created a task!",
+        variant: "success",
+      });
       navigate("/tasks"); // Redirect to tasks list or wherever you need
     } catch (error) {
-      console.error("Error creating task:", error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to create a task",
+        variant: "error",
+      });
     }
   }
 
@@ -211,32 +143,34 @@ function CreateTaskpage() {
                   placeholder="Task content..."
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 ">
                 <Label>Todo List</Label>
-                {taskData.todoList.map((todo, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="isComplete"
-                      checked={todo.isComplete}
-                      onChange={(e) => handleTodoChange(index, e)}
-                    />
-                    <Input
-                      type="text"
-                      name="title"
-                      value={todo.title}
-                      onChange={(e) => handleTodoChange(index, e)}
-                      placeholder="Todo title..."
-                    />
+                <div className=" max-h-[120px] overflow-y-auto flex flex-col gap-2">
+                  {taskData.todoList.map((todo, index) => (
+                    <div key={index} className="flex items-center gap-2 ">
+                      <input
+                        type="checkbox"
+                        name="isComplete"
+                        checked={todo.isComplete}
+                        onChange={(e) => handleTodoChange(index, e)}
+                      />
+                      <Input
+                        type="text"
+                        name="title"
+                        value={todo.title}
+                        onChange={(e) => handleTodoChange(index, e)}
+                        placeholder="Todo title..."
+                      />
 
-                    <Button
-                      variant="icon"
-                      onClick={() => handleRemoveTodo(index)}
-                    >
-                      <XCircle color="red" />
-                    </Button>
-                  </div>
-                ))}
+                      <Button
+                        variant="icon"
+                        onClick={() => handleRemoveTodo(index)}
+                      >
+                        <XCircle color="red" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
                 <Button variant="ghost" type="button" onClick={handleAddTodo}>
                   Add Todo
                 </Button>

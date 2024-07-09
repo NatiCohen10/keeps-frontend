@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 import api from "@/lib/api";
 import { useClickAway } from "@uidotdev/usehooks";
 import { CircleX, X } from "lucide-react";
@@ -29,7 +30,7 @@ function TaskDetailsPage() {
   const [task, setTask] = useState(null);
   const [newTodo, setNewTodo] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { toast } = useToast();
   const params = useParams();
   const { taskId } = params;
   const navigate = useNavigate();
@@ -42,7 +43,12 @@ function TaskDetailsPage() {
 
         setTask(res.data);
       } catch (error) {
-        console.error(error);
+        toast({
+          title: "Oops! something went wrong!",
+          description:
+            "Something went wrong while trying to fetch tasks from the server",
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }
@@ -70,8 +76,17 @@ function TaskDetailsPage() {
       await api.patch(`/tasks/${taskId}`, {
         todoList: todoToToggle,
       });
+      toast({
+        title: "Success!",
+        description: "Successfuly updated your task",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to update a task",
+        variant: "error",
+      });
       const todoToToggle = task.todoList.map((todo) => {
         if (todo._id === todoId) {
           return { ...todo, isComplete: todo.isComplete };
@@ -103,13 +118,21 @@ function TaskDetailsPage() {
         ...prev,
         todoList: todoListToRender,
       }));
-      console.log("todoListToRender:", todoListToRender);
       await api.patch(`/tasks/${taskId}`, {
         todoList: todoListToPost,
       });
+      toast({
+        title: "Success!",
+        description: "Successfuly updated your task",
+        variant: "success",
+      });
       setNewTodo("");
     } catch (error) {
-      console.error("Error adding todo:", error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to update a task",
+        variant: "error",
+      });
       const prevTodoList = task.todoList.filter((todo) => todo._id !== todoId);
       setTask((prev) => ({ ...prev, todoList: prevTodoList }));
     }
@@ -121,15 +144,24 @@ function TaskDetailsPage() {
       const updatedTodos = task.todoList.filter((todo) => {
         return todo._id !== todoId;
       });
-      console.log(updatedTodos);
+
       setTask((prev) => {
         return { ...prev, todoList: updatedTodos };
       });
       await api.patch(`/tasks/${taskId}`, {
         todoList: updatedTodos,
       });
+      toast({
+        title: "Success!",
+        description: "Successfuly deleted a todo",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to delete a todo",
+        variant: "error",
+      });
       setTask((prev) => ({ ...prev, todoList: previousTodos }));
     }
   }
@@ -189,9 +221,6 @@ function TaskDetailsPage() {
                             />
                             <label
                               className=" cursor-pointer"
-                              onClick={(ev) => {
-                                console.log(todo.title);
-                              }}
                               htmlFor={`${todo._id}`}
                             >
                               {todo.title}
@@ -206,15 +235,16 @@ function TaskDetailsPage() {
                         </div>
                       );
                     })}
-                    <div className="flex gap-2 mt-4">
+                    <form onSubmit={handleAddTodo} className="flex gap-2 mt-4">
                       <Input
+                        required
                         type="text"
                         value={newTodo}
                         onChange={(e) => setNewTodo(e.target.value)}
                         placeholder="Enter new todo..."
                       />
-                      <Button onClick={handleAddTodo}>Add Todo</Button>
-                    </div>
+                      <Button>Add Todo</Button>
+                    </form>
                   </div>
                 </div>
               )}

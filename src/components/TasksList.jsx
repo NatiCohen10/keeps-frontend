@@ -19,14 +19,16 @@ function TasksList() {
   useEffect(() => {
     async function fetchTasks() {
       try {
-        setLoading(true);
         const res = await api.get("/tasks");
 
         setTasks(res.data);
       } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+        toast({
+          title: "Oops! something went wrong!",
+          description:
+            "Something went wrong while trying to fetch tasks from the server",
+          variant: "error",
+        });
       }
     }
 
@@ -47,8 +49,17 @@ function TasksList() {
       const res = await api.patch(`/tasks/${taskId}`, {
         isPinned: !task.isPinned,
       });
+      toast({
+        title: "Success!",
+        description: "Successfuly updated your task",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Oops! something went wrong!",
+        description: "Something went wrong while trying to update a task",
+        variant: "error",
+      });
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task._id === taskId ? { ...task, isPinned: !task.isPinned } : task
