@@ -8,8 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 function ContactPage() {
+  const { toast } = useToast();
+  function handleContactSubmission(ev) {
+    ev.preventDefault();
+    ev.target.reset();
+    toast({
+      title: "Success!",
+      description: "Successfuly sent your message!",
+      variant: "success",
+    });
+  }
   return (
     <section className="flex justify-center items-center h-[80vh] bg-background">
       <Card className="w-full max-w-md p-6 bg-card shadow-md">
@@ -17,7 +28,7 @@ function ContactPage() {
           <h2 className="text-2xl font-bold text-foreground">Contact Us</h2>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleContactSubmission}>
             <div className="mb-4">
               <label
                 htmlFor="name"

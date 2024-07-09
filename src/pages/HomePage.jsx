@@ -71,7 +71,7 @@ function HomePage() {
           <div className="hidden lg:block">
             <img
               className="max-h-[60vh] w-full"
-              src="src\images\isometric-time-management-concept-illustrated_52683-55534.avif"
+              src="src\public\isometric-time-management-concept-illustrated.png"
               alt="tasks"
             />
           </div>
