@@ -17,6 +17,7 @@ function TasksList() {
   useEffect(() => {
     async function fetchTasks() {
       try {
+        setLoading(true);
         const res = await api.get("/tasks");
 
         setTasks(res.data);
@@ -27,6 +28,8 @@ function TasksList() {
             "Something went wrong while trying to fetch tasks from the server",
           variant: "error",
         });
+      } finally {
+        setLoading(false);
       }
     }
 
