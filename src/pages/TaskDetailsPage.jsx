@@ -1,4 +1,3 @@
-import TodoCheckbox from "@/components/ui/TodoCheckbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,7 +9,7 @@ import api from "@/lib/api";
 import { useClickAway } from "@uidotdev/usehooks";
 import { CircleX, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function makeId(length) {
   const characters =

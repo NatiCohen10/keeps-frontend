@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,7 +21,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useClickAway } from "@uidotdev/usehooks";
-import { Skeleton } from "./ui/skeleton";
 import { useToast } from "./ui/use-toast";
 
 function TaskItem(props) {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TaskItem from "./TaskItem";
 import api from "@/lib/api";
 import { useAuth } from "../context/authContext";
@@ -13,8 +13,6 @@ function TasksList() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const { toast } = useToast();
-
-  // toast({ title: "hi", description: "bye", variant: "destructive" });
 
   useEffect(() => {
     async function fetchTasks() {
